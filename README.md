@@ -15,7 +15,7 @@ http://www.sencha.com/products/sencha-cmd/download
 sudo gem install sass -v 3.2.13
 sudo gem install fssm -v 0.2.10
 sudo gem install compass -v 0.12.2
-cd resourcs && compass watch
+cd resources/sass && compass watch
 
 - Phonegap / Cordova
 http://docs.sencha.com/cmd/5.x/cordova_phonegap.html
