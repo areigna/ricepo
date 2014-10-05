@@ -1,2 +1,6 @@
 build/
 phonegap/
+*.DS_Store
+bootstrap.js
+bootstrap.json
+resources/sass/.sass-cache/

@@ -1,4 +1,16 @@
 {
+    "builds": {
+        "native": {
+            "packager": "phonegap",
+            "phonegap" : {
+                "config": {
+                    /*"remote": true,*/
+                    "id": "com.ricepo.app",
+                    "platform": "ios"
+                }
+            }
+        }
+    },
     /**
      * The application's namespace, used by Sencha Command to generate classes
      */
