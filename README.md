@@ -18,6 +18,7 @@ sudo gem install compass -v 0.12.2
 cd resourcs && compass watch
 
 - Phonegap / Cordova
+http://docs.sencha.com/cmd/5.x/cordova_phonegap.html
 sudo npm install -g phonegap
 sudo npm install -g cordova
 
