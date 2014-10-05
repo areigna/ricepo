@@ -8,6 +8,9 @@ areigna@gmail.com
 ======
 Development Environment Setup
 
+- Sencha
+http://www.sencha.com/products/sencha-cmd/download
+
 - Compass
 sudo gem install sass -v 3.2.13
 sudo gem install fssm -v 0.2.10
