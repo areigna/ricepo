@@ -1,0 +1,483 @@
+//text color
+$major: rgba(0,0,0,0.95);
+$minor: rgba(0,0,0,0.8);//#C3C1C1;
+$link: tomato;//red;//#157efb;
+$av: rgba(255,138,116,0.95);
+$fade: rgba(0,0,0,0.35);
+
+$main: #FEFEF9;
+
+$goodColor: rgba(0,128,0,0.8);
+$badColor: rgba(255,0,0,0.8);
+
+//bg
+$bg: transparent;
+$miniBg: rgba(0,0,0,0.15);
+$lightBg: rgba(0,0,0,0.2);
+$darkBg: rgba(0,0,0,0.7);
+$toolbg: #f8f9f9;
+
+//size
+$barHeight: 51px;
+$buttonHeight: 45px;
+$fontSize: 17px;
+$smallSize: 15px;
+$midSize: 20px;
+$largeSize: 38px;
+
+@mixin font($char) {
+	font-family: 'Pictos';
+	content: $char;
+}
+
+@mixin status{
+	.waiting,.processing{ color: $link }
+	.confirmed{ color: $goodColor }
+	.cancelled{color: $fade}
+	.failed{color: $fade}
+	.y{ 
+		font-family: 'Pictos';
+		color: $link;
+		-webkit-animation: rotate 1s linear 0s infinite;
+		animation: rotate 1s linear 0s infinite;
+	}
+
+	.waiting input{ color: $link }
+	.processing input{ color: $link }
+	.confirmed input{ color: $goodColor }
+	.cancelled input{color: $fade}
+	.failed input{color: $fade}
+	.y input{
+		color: $link;
+		font-family: 'Pictos';
+		-webkit-animation: rotate 1s linear 0s infinite;
+		animation: rotate 1s linear 0s infinite;
+	}
+}
+@mixin rotate($n) {
+	transform:rotate($n+deg);
+	-ms-transform:rotate($n+deg); /* IE 9 */
+	-webkit-transform:rotate($n+deg); /* Opera, Chrome, and Safari */
+}
+
+@mixin transition($sec){
+	-webkit-transition: $sec;
+	transition: $sec;
+}
+
+@mixin shakeFrame(){
+	0%   {@include rotate(0)}
+	10%   {@include rotate(-45)}
+	30%   {@include rotate(45)}
+	50%   {@include rotate(-45)}
+	70%   {@include rotate(45)}
+	90%   {@include rotate(-45)}
+	100%   {@include rotate(0)}
+}
+@mixin rotateFrame(){
+	0%   {@include rotate(0)}
+	100%   {@include rotate(360)}
+}
+@mixin fadeFrame(){
+	0%   {opacity: 0.3;}
+	70%   {opacity: 1;}
+	100%   {opacity: 0.3;}
+}
+
+@-webkit-keyframes shake{ @include shakeFrame }
+@keyframes shake{ @include shakeFrame }
+
+@-webkit-keyframes rotate{ @include rotateFrame }
+@keyframes rotate{ @include rotateFrame }
+
+@-webkit-keyframes fade{ @include fadeFrame }
+@keyframes fade{ @include fadeFrame }
+.shake{
+	-webkit-animation: shake 1s;
+	animation: shake 1s;
+}
+
+#bottom{
+	-webkit-animation: fade 2s ease-in-out 0s infinite;
+	animation: fade 2s ease-in-out 0s infinite;
+}
+
+body{
+	background-color: $main;
+}
+div#ext-viewport{
+	background-color: $main;
+}
+/*******pressed********/
+.pressed{
+	opacity: 0.3;
+}
+
+
+/*******loading mask ******/
+div.x-mask.x-loading-mask{
+	background-color: transparent;//$miniBg;
+	div.x-mask-inner{
+		background-color: $lightBg;
+		span{
+			color: white;
+			background-color: $link;
+		}
+		span.x-loading-top{
+			display: none;
+		}
+		span:before{background-color: $link}
+		span:after{background-color: $link;}
+	}
+}
+
+
+/******all tool bar and title bar ******/
+div.r-container{background-color: $bg; }
+div.x-toolbar.r-toolbar{
+	background-color: $link;
+	border-radius: 0px;
+	border: 0px;
+	.x-title{
+		color: white;
+		font-size: 1.1em;
+	}
+	.x-button{
+		height: $buttonHeight;
+		color: white;
+		font-weight:300;
+		.x-button-label{color:white; font-weight:300;}
+		.x-button-icon{color:white; }
+	}
+	.x-button.right{
+		padding-left: 20px;
+		margin-right: 0;
+	}
+	.x-button.left{
+		padding-right: 20px;
+		margin-left: 0;
+	}
+	.x-item-disabled{opacity: 0.2;}
+	.x-button-pressing{opacity: 0.2;}
+	.x-button:before{ color:white; }
+}
+
+div.x-toolbar.r-toolbar.ricepo{
+	div.x-title{
+		font-size:15px;
+	}
+}
+
+
+
+
+
+div.x-dataview.r-dataview{
+	background-color: $bg;
+	.rest .container{
+		background-size: cover;
+		color: $major;
+		padding: 3%;
+
+		.title{
+			font-size: $largeSize;
+			font-weight: lighter;
+		}
+		.popular{
+			font-size: $smallSize;
+			color: rgba(0,0,0,0.65);
+			margin-top: 1%;
+		}
+	}
+	.rest .closed{
+		color: $fade;
+		//.title span:after{content: 'Closed'; }
+		.popular{color: $fade;}
+	}
+	.rest .off{
+		color: $fade;
+		//.title span:after{content: 'Coming Soon'; }
+		.popular{color: $fade;}
+	}
+}
+
+
+
+
+.foodlist{
+	background-color:$bg;
+	.x-list-header{
+		background-color: $av; //rgba(220,220,220,0.95);//rgba(255,164,147,0.95);
+		color: white;//rgba(0,0,0,0.4);
+	}
+	div.x-list-item.food:before{
+		border-bottom: solid 1px $lightBg;
+	}
+	.food{
+		font-size: $fontSize;
+		font-weight: 600;
+		color: $major;
+		.anim{
+			position:absolute;
+			display:none;
+			z-index: 100;
+			color: $link;
+		}
+		.anim:before{
+			@include font('%')
+		}
+		.right{
+			float: right; 
+			font-weight: 500;
+			color: $av;//rgba(0,0,0,0.5);
+			font-size: 14px;
+			line-height: 24px;
+			border: 1px solid $av;//rgba(0,0,0,0.5);
+			width: 50px;
+			text-align:center;
+			border-radius: 3px;
+		}
+		.info{
+			color: $fade;
+			font-size: 14px;
+			margin-top: 5px;
+			margin-bottom: -5px;
+			font-style: italic;
+		}
+		span.icon{
+			font-family: 'Pictos';
+			font-size: 20px;
+			color: $av;
+		}
+	}
+}
+
+
+
+
+
+div.orderlist{
+	background-color: $bg;
+	.order{
+		.container{
+			background-color: $bg;
+			color: $major;
+
+			.food{
+				font-size: $midSize;
+				font-weight: 600;
+				@include status;
+
+			}
+			.date{
+				font-size: $smallSize;
+				color: $minor;
+				margin-top: 1%;
+			}
+			span{ 
+				float:right; 
+				font-weight: normal;
+			}
+		}
+		.Cancelled:{opacity: 0.4; }
+	}
+}
+
+
+/*********************/
+
+.cartitem{
+	height: $barHeight;
+	color: $major;
+	.container{
+		height: $barHeight;
+		padding-left: 1em;
+		font-size: $fontSize;
+		.food{
+			height: $barHeight;
+			padding-right: 1em;
+			padding-top: 0.7em;
+			padding-bottom: 0.7em;
+			border-bottom: 1px solid $lightBg;
+			font-weight: 600;
+		}
+		span{
+			float: right; 
+			font-weight: 400;
+			color: rgba(0,0,0,0.5);
+		}
+	}
+	.deletePanel{
+		height: $barHeight;
+		border-bottom: 1px solid $lightBg;
+		.x-button{
+			background-color: $link;
+			color: white;
+			border: 0;
+			border-radius: 0px;
+			.x-button-icon,.x-button-label{
+				color: white;
+				font-size: $fontSize;
+			}
+		}
+	}
+}
+div.centerfield{
+	.x-unsized.x-field-input{
+		border: 0;
+		border-radius: 0;
+		border-bottom: 1px solid $lightBg;
+	}
+	input{
+		font-size: $fontSize;
+		font-weight: 500;
+		text-align: center;
+	}
+}
+div.centerfield.off{
+	input{
+		color: $lightBg;
+	}
+}
+
+/*
+.carts{
+	border-top: 1px solid $minor;
+	box-shadow: 0 0 15px 0 $minor;
+	color: $bg;
+	.cartItem{
+		padding: 1%;
+		border: 1px solid $bg;
+		border-radius: 4px;
+		margin-top: 3%;
+		margin-left: 1%;
+		span{
+			font-size: 60%;
+			color: $minor;
+		}
+	}
+}
+*/
+
+
+form.r-form{
+	background-color: $bg;
+	div.x-scroll-container{
+		background-color: $bg;
+	}
+	.x-input-radio:checked + .x-field-mask::after{
+		color: $link;
+	}
+	div#addressfield{
+		@include transition(0.5);
+	}
+	div#addressfield.out{
+		opacity: 0;
+		display: none;
+	}
+	//slider field
+	div.x-slider-field span{
+		line-height:33px;
+		padding-left: 2px;
+	}
+	div.x-slider-field .now{
+		color: $fade;
+	}
+	//text field
+	div.x-field{
+		background-color: $bg;
+		input.x-input-text,.x-input-tel{
+			padding-left: 1em;
+			font-weight: 400;
+			font-size: 1.1em;
+			color: $major;
+			//border-bottom: 1px solid $darkBg;
+			border-radius: 0;
+		}
+	}
+	//food name and price field
+	div.totalpanel{
+		input{text-align:right;}
+		//div.x-form-fieldset-instructions{ text-align : left;}
+		div.totalfield{
+			span, input{
+				font-weight: bold; 
+			}
+		}
+	}
+	div.statuspanel{
+		input.x-input-text{
+			text-align:center;
+			font-weight: 500;
+		}
+		@include status;
+	}
+	//bottom button
+	div.buttonpanel{
+		div.x-inner{
+			border: 0;
+			div.buttonfield{
+				height: $barHeight;
+				background-color: $link;
+				border: 0;
+				border-radius: 0;
+				span.x-button-label{
+					color: white;
+				}
+			}
+			div.buttonfield.x-item-disabled{
+				opacity: 0.2;
+			}
+			div.buttonfield.good{
+				background-color: $goodColor;
+			}
+			div.buttonfield.bad{
+				background-color: $badColor;
+			}
+		}
+	}
+}
+
+
+.updown{
+	@include rotate(180)
+}
+
+
+.wrapBtn{
+	width: 20vw;
+	text-overflow:ellipsis;
+}
+.noborder{
+	border: 0px;
+}
+.box{
+	background-color: $bg;
+	color: $major;
+}
+
+.borderTop{
+	border-top: 1px solid $minor;
+}
+.borderLeft{
+	border-left: 1px solid $minor;
+}
+
+.hidden{
+	display: none;
+}
+
+.disabled{
+	opacity: 0.2;
+}
+
+/*
+.redBtn{
+	.x-button-icon{
+		color: red;
+	}
+	.x-button-label{
+		color: red;
+	}
+}
+*/
