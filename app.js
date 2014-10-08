@@ -9,8 +9,8 @@
     changes and its generated code, it will produce a "merge conflict" that you
     will need to resolve manually.
 */
-function host(){ return 'http://ec2-174-129-160-38.compute-1.amazonaws.com:8080'; }
-//function host(){ return 'http://ec2-54-197-197-221.compute-1.amazonaws.com:8080'; }
+//function host(){ return 'http://ec2-174-129-160-38.compute-1.amazonaws.com:8080'; } //prod
+function host(){ return 'http://ec2-54-197-197-221.compute-1.amazonaws.com:8080'; } //dev
 //function host(){ return 'http://localhost:8080'; }
 
 Ext.application({
@@ -24,6 +24,7 @@ Ext.application({
     rest: null,
 
     lastRefresh: 0,
+    lastCityRefresh: 0,
     lastResume: 0,
 
     isChn: function(){
@@ -96,12 +97,12 @@ Ext.application({
         'Cart', 'CartItem',
         'Address',
         'OrderList','Order', 
-        'Settings',
+        'Settings', 'CityList'
     ],
 
 
     stores: [
-        'Rests','Foods','Carts','Orders', 'RecentFoods',
+        'Rests','Foods','Carts','Orders', 'RecentFoods', 'Cities'
     ],
 
     icon: {
@@ -145,6 +146,7 @@ Ext.application({
 
         
         // Initialize the main view
+        var citylist = Ext.create('ricepo.view.CityList');
         var home = Ext.create('ricepo.view.Home');
         Ext.create('ricepo.view.FoodList');
         Ext.create('ricepo.view.Cart');
@@ -152,7 +154,7 @@ Ext.application({
         Ext.create('ricepo.view.OrderList');
 
         //add home
-        Ext.Viewport.add(home);
+        Ext.Viewport.add(citylist);
         // Destroy the #appLoadingIndicator element
         Ext.fly('appLoadingIndicator').destroy();
         //hide splash screen
@@ -335,7 +337,7 @@ Ext.application({
         });
     },
     goBack: function(){
-        var map = {'home': 'home', 'foodlist': 'home', 'cart': 'foodlist', 'address': 'cart', 'orderlist': 'home', 'order': 'orderlist', 'settings': 'home', };
+        var map = {'home': 'home', 'foodlist': 'home', 'cart': 'foodlist', 'address': 'cart', 'orderlist': 'home', 'order': 'orderlist', 'settings': 'home', 'citylist': 'home'};
         var orig = Ext.Viewport.getActiveItem().getId();
         var dest = map[orig];
         if(orig == 'settings') Ext.Viewport.animateActiveItem(Ext.getCmp('home'), {type: 'reveal', direction: 'down'});

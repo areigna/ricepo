@@ -17,6 +17,7 @@ Ext.define('ricepo.view.Home', {
 			//slotSnapSize: 50,
 		},
 		orderCount: 0,
+		city: null,
 		store: 'restsStore',
 		loadingText: false,
 		itemCls: 'rest',
@@ -86,8 +87,8 @@ Ext.define('ricepo.view.Home', {
 			            listeners: {
 				            release: function(cmp,e){
 				            	e.stopEvent();
-				            	var set = Ext.getCmp('settings');
-				            	if(!set){ set = Ext.create('ricepo.view.Settings');}
+				            	var set = Ext.getCmp('citylist');
+				            	if(!set){ set = Ext.create('ricepo.view.CityList');}
 				            	Ext.Viewport.animateActiveItem(set, {type: 'cover', direction: 'up'});
 				            },
 			            }
