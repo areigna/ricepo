@@ -169,15 +169,14 @@ div.x-toolbar.r-toolbar.ricepo{
 }
 
 
-
-
-
+//rest list
 div.x-dataview.r-dataview{
 	background-color: $bg;
-	.rest .container{
+	.rest .container,.city{
 		background-size: cover;
 		color: $major;
 		padding: 3%;
+		border-bottom: 1px solid $lightBg;
 
 		.title{
 			font-size: $largeSize;

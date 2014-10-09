@@ -18,16 +18,10 @@ Ext.define('ricepo.view.CityList', {
 		},
 		store: 'citiesStore',
 		loadingText: false,
-		itemCls: 'city',
         itemTpl: new Ext.XTemplate(
-			"<div class='container ",
-				"<div class='title'>",
-					"{city}",
-				"</div>",
-            "</div>",
-            {
-            	disableFormats: true,
-		    }
+        	"<div class='container city'>",
+				"<div class='title'>{[values.city.toUpperCase()]}</div>",
+			"</div>"
         ),
 		listeners: {
 			//when select restaurant
