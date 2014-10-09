@@ -7,12 +7,12 @@ Ext.define('ricepo.store.Rests', {
 	config: {
 		model: 'ricepo.model.Rest',
 		storeId: 'restsStore',
-		autoLoad: true,
+		//autoLoad: true,
 		sorters: {property:'score', direction: 'DESC'},
 		proxy: {
 			type: 'ajax',
 			url: host() + '/getRestsByCity',
-			extraParams: {city: 'rochester,ny', },
+			extraParams: null,
 			reader: {
 	            type: "json",
 	            rootProperty: "Items",
@@ -20,6 +20,7 @@ Ext.define('ricepo.store.Rests', {
 		},
 		listeners: {
 			beforeload: function(){
+				if(!this.getProxy().getExtraParams()) return false;
 				//if no network connection
 				if(!ricepo.app.checkNetwork()){
 					ricepo.app.bottomPush('Reload');

@@ -22,6 +22,7 @@ Ext.application({
     startStatus: 'Processing',
     startMsg: 'Contacting restaurant',
     rest: null,
+    city: null,
 
     lastRefresh: 0,
     lastCityRefresh: 0,
@@ -146,15 +147,25 @@ Ext.application({
 
         
         // Initialize the main view
-        var citylist = Ext.create('ricepo.view.CityList');
-        var home = Ext.create('ricepo.view.Home');
+        var firstView;
+        //if city set , go to rest
+        if(localStorage.getItem('city')){
+            firstView = Ext.create('ricepo.view.Home', {
+                city: localStorage.getItem('city')
+            });
+        }
+        //otherwise, go to citylist
+        else{
+            firstView = Ext.create('ricepo.view.CityList');
+            Ext.create('ricepo.view.Home');
+        }
         Ext.create('ricepo.view.FoodList');
         Ext.create('ricepo.view.Cart');
         Ext.create('ricepo.view.Address');
         Ext.create('ricepo.view.OrderList');
 
         //add home
-        Ext.Viewport.add(citylist);
+        Ext.Viewport.add(firstView);
         // Destroy the #appLoadingIndicator element
         Ext.fly('appLoadingIndicator').destroy();
         //hide splash screen
@@ -340,7 +351,7 @@ Ext.application({
         var map = {'home': 'home', 'foodlist': 'home', 'cart': 'foodlist', 'address': 'cart', 'orderlist': 'home', 'order': 'orderlist', 'settings': 'home', 'citylist': 'home'};
         var orig = Ext.Viewport.getActiveItem().getId();
         var dest = map[orig];
-        if(orig == 'settings') Ext.Viewport.animateActiveItem(Ext.getCmp('home'), {type: 'reveal', direction: 'down'});
+        if(orig == 'settings' || orig =='citylist') Ext.Viewport.animateActiveItem(Ext.getCmp(dest), {type: 'reveal', direction: 'down'});
         else ricepo.app.slideCmp(Ext.getCmp(dest), 'right');
     },
     ampm: function(hour, min){

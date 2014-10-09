@@ -70,7 +70,7 @@ Ext.define('ricepo.view.Home', {
 				xtype: 'titlebar',
 				cls: ['r-toolbar','ricepo'],
 				docked: 'top',
-				title: 'Rochester NY',
+				title: null,
 				listeners: {
                     initialize: function(cmp){
                         cmp.element.on('tap', function(){
@@ -81,15 +81,14 @@ Ext.define('ricepo.view.Home', {
                 },
 				items: [
 					{
-			            text: 'Feedback',
+			            text: 'City',
 			            align: 'left',
 			            cls: 'left',
 			            listeners: {
 				            release: function(cmp,e){
 				            	e.stopEvent();
-				            	var set = Ext.getCmp('citylist');
-				            	if(!set){ set = Ext.create('ricepo.view.CityList');}
-				            	Ext.Viewport.animateActiveItem(set, {type: 'cover', direction: 'up'});
+				            	var city = Ext.getCmp('citylist') || Ext.create('ricepo.view.CityList');
+				            	Ext.Viewport.animateActiveItem(city, {type: 'cover', direction: 'up'});
 				            },
 			            }
 					},
@@ -108,6 +107,22 @@ Ext.define('ricepo.view.Home', {
 				],
 			},
 		],
+	},
+	updateCity: function(current, old){
+		if(current){
+			//load the new rest list
+			var store = this.getStore();
+			store.removeAll();
+			store.getProxy().setExtraParams({city: current});;
+			store.load();
+			//change title
+			var capital = current.split(',')[0].toUpperCase();
+			this.down('titlebar').setTitle(capital);
+			//global change
+			ricepo.app.city = current;
+			//localstorage
+			localStorage.setItem("city", current);
+		}
 	},
 	updateOrderCount: function(current){
 		var text = 'Orders';

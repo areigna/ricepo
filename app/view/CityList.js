@@ -7,8 +7,8 @@ Ext.define('ricepo.view.CityList', {
 	config: {
 		id: 'citylist',
 		cls: 'r-dataview',
-		pressedCls: 'pressed',
-		selectedCls: 'pressed',
+		//pressedCls: 'pressed',
+		//selectedCls: 'pressed',
 		fullscreen: true,
 		scrollable: {
 			direction: 'vertical',
@@ -38,13 +38,13 @@ Ext.define('ricepo.view.CityList', {
 	        	var home = Ext.getCmp('home');
             	Ext.Viewport.animateActiveItem(home, {type: 'reveal', direction: 'down'}); 
 
-	        	home.setCity(record);//set rest for foodlist
+	        	home.setCity(record.get('city'));
 			},
 			show: function(){
-				this.deselectAll();
+				//this.deselectAll();
 			},
 			initialize: function(){
-				;
+				this.getStore().load();
 			},
 		},
 		items: [
@@ -52,12 +52,11 @@ Ext.define('ricepo.view.CityList', {
 				xtype: 'titlebar',
 				cls: ['r-toolbar','ricepo'],
 				docked: 'top',
-				title: 'Ricepo',
+				title: 'Please Select Your City',
 				listeners: {
                     initialize: function(cmp){
                         cmp.element.on('tap', function(){
-                            cmp.up('home').getScrollable().getScroller().scrollTo(0,0,true);
-                            Ext.getStore('restsStore').updateClose();
+                            cmp.up('citylist').getScrollable().getScroller().scrollTo(0,0,true);
                         });
                     }
                 }

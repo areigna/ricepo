@@ -7,7 +7,7 @@ Ext.define('ricepo.store.Cities', {
 	config: {
 		model: 'ricepo.model.City',
 		storeId: 'citiesStore',
-		autoLoad: true,
+		//autoLoad: true,
 		proxy: {
 			type: 'ajax',
 			url: host() + '/getCitiesByCountry',
