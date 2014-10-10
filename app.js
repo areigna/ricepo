@@ -351,7 +351,8 @@ Ext.application({
         var map = {'home': 'home', 'foodlist': 'home', 'cart': 'foodlist', 'address': 'cart', 'orderlist': 'home', 'order': 'orderlist', 'settings': 'home', 'citylist': 'home'};
         var orig = Ext.Viewport.getActiveItem().getId();
         var dest = map[orig];
-        if(orig == 'settings' || orig =='citylist') Ext.Viewport.animateActiveItem(Ext.getCmp(dest), {type: 'reveal', direction: 'down'});
+        if(orig == 'settings') Ext.Viewport.animateActiveItem(Ext.getCmp(dest), {type: 'reveal', direction: 'down'});
+        else if(orig == 'citylist') ricepo.app.slideCmp(Ext.getCmp(dest), 'left'); 
         else ricepo.app.slideCmp(Ext.getCmp(dest), 'right');
     },
     ampm: function(hour, min){

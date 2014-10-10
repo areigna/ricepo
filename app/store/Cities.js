@@ -7,15 +7,21 @@ Ext.define('ricepo.store.Cities', {
 	config: {
 		model: 'ricepo.model.City',
 		storeId: 'citiesStore',
+		data : [
+			{city: "Rochester,NY", country: "us", image: 'resources/images/3.jpg'},
+			{city: "Bloomington,IN", country: "us", image: 'resources/images/5.jpg'},
+		]
 		//autoLoad: true,
+		//commented out the ajax city loading
+		/*
 		proxy: {
 			type: 'ajax',
 			url: host() + '/getCitiesByCountry',
 			extraParams: {country: 'us', },
 			reader: {
-	            type: "json",
-	            rootProperty: "Items",
-	        },
+				type: "json",
+				rootProperty: "Items",
+			},
 		},
 		listeners: {
 			beforeload: function(){
@@ -36,6 +42,7 @@ Ext.define('ricepo.store.Cities', {
 			updaterecord: function(){
 				;
 			},
-		},
+		}
+		*/
 	}
 });

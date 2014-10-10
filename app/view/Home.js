@@ -88,7 +88,7 @@ Ext.define('ricepo.view.Home', {
 				            release: function(cmp,e){
 				            	e.stopEvent();
 				            	var city = Ext.getCmp('citylist') || Ext.create('ricepo.view.CityList');
-				            	Ext.Viewport.animateActiveItem(city, {type: 'cover', direction: 'up'});
+				            	ricepo.app.slideCmp(city, 'right');
 				            },
 			            }
 					},

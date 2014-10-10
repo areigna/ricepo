@@ -19,9 +19,15 @@ Ext.define('ricepo.view.CityList', {
 		store: 'citiesStore',
 		loadingText: false,
         itemTpl: new Ext.XTemplate(
-        	"<div class='container city'>",
-				"<div class='title'>{[values.city.toUpperCase()]}</div>",
-			"</div>"
+        	"<div class='container city' style=\"background-image:url('{image}')\">",
+				"<div class='title'>{[this.capital(values.city)]}</div>",
+			"</div>",
+			{
+				capital: function(city){
+					var state = city.slice(-2).toUpperCase();
+					return city.replace(city[0], city[0].toUpperCase()).slice(0,-3) + ' ' + state;
+				}
+			}
         ),
 		listeners: {
 			//when select restaurant
@@ -30,7 +36,7 @@ Ext.define('ricepo.view.CityList', {
 				if(!ricepo.app.checkNetwork()){return false;}
 				
 	        	var home = Ext.getCmp('home');
-            	Ext.Viewport.animateActiveItem(home, {type: 'reveal', direction: 'down'}); 
+            	ricepo.app.slideCmp(home, 'left'); 
 
 	        	home.setCity(record.get('city'));
 			},
@@ -46,7 +52,7 @@ Ext.define('ricepo.view.CityList', {
 				xtype: 'titlebar',
 				cls: ['r-toolbar','ricepo'],
 				docked: 'top',
-				title: 'Please Select Your City',
+				title: 'Please Choose Your City',
 				listeners: {
                     initialize: function(cmp){
                         cmp.element.on('tap', function(){
@@ -54,7 +60,7 @@ Ext.define('ricepo.view.CityList', {
                         });
                     }
                 }
-			},
+			}
 		],
 	},
 });
