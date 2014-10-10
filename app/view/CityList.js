@@ -44,7 +44,7 @@ Ext.define('ricepo.view.CityList', {
 				//this.deselectAll();
 			},
 			initialize: function(){
-				this.getStore().load();
+				//this.getStore().load();
 			},
 		},
 		items: [
