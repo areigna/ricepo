@@ -50,7 +50,7 @@ Ext.define('ricepo.view.CityList', {
 		items: [
 			{
 				xtype: 'titlebar',
-				cls: ['r-toolbar','ricepo'],
+				cls: 'r-toolbar',
 				docked: 'top',
 				title: 'Please Choose Your City',
 				listeners: {
