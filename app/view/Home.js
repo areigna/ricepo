@@ -113,7 +113,7 @@ Ext.define('ricepo.view.Home', {
 			//load the new rest list
 			var store = this.getStore();
 			store.removeAll();
-			store.getProxy().setExtraParams({city: current});;
+			store.getProxy().setExtraParams({city: current.toLowerCase()});;
 			store.load();
 			//change title
 			var capital = current.split(',')[0].toUpperCase();

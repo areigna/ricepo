@@ -9,8 +9,8 @@
     changes and its generated code, it will produce a "merge conflict" that you
     will need to resolve manually.
 */
-//function host(){ return 'http://ec2-174-129-160-38.compute-1.amazonaws.com:8080'; } //prod
-function host(){ return 'http://ec2-54-197-197-221.compute-1.amazonaws.com:8080'; } //dev
+function host(){ return 'http://ec2-174-129-160-38.compute-1.amazonaws.com:8080'; } //prod
+//function host(){ return 'http://ec2-54-197-197-221.compute-1.amazonaws.com:8080'; } //dev
 //function host(){ return 'http://localhost:8080'; }
 
 Ext.application({
