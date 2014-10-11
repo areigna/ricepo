@@ -33,7 +33,8 @@ Ext.define('ricepo.view.CityList', {
 			//when select restaurant
 			itemtap: function(cmp, index, target, record,e){
 				//if no network connection
-				if(!ricepo.app.checkNetwork()){return false;}
+				//no network checking here. beforeLoad for restsStore will check network
+				//if(!ricepo.app.checkNetwork()){return false;}
 				
 	        	var home = Ext.getCmp('home');
             	ricepo.app.slideCmp(home, 'left'); 
