@@ -19,7 +19,7 @@ Ext.define('ricepo.view.CityList', {
 		store: 'citiesStore',
 		loadingText: false,
         itemTpl: new Ext.XTemplate(
-        	"<div class='container city' style=\"background-image:url('{image}')\">",
+        	"<div class='container city' style=\"background-image:url('resources/images/city/{[values.city.toLowerCase()]}.jpg')\">",
 				"<div class='title'>{[this.capital(values.city)]}</div>",
 			"</div>",
 			{
