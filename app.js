@@ -258,9 +258,9 @@ Ext.application({
                 cls: 'r-toolbar',
                 docked: 'bottom',
             });
-            bottom.element.on('tap',function(cmp){
+            bottom.element.on('tap',function(e){
                 ricepo.app.bottomPull();
-                if(title.indexOf('Reload')>-1){
+                if(bottom.getTitle().indexOf('Reload')>-1){
                     Ext.getStore('restsStore').load();
                     ricepo.app.fadeCmp(Ext.getCmp('home'));
                 }
