@@ -6,26 +6,10 @@ Ext.define('ricepo.view.CartItem',{
 		xtype: 'container', 
         layout: 'hbox',
         cls:'cartitem',
-	    scrollable: {
-	     	direction: 'horizontal',
-	     	directionLock: true,
-	     	indicators: false,
-	     	slotSnapSize: 100,
-	     	momentumEasing: {
- 			    momentum: {
- 			        acceleration: 0, friction:1
- 			    },
- 			    bounce: {
- 			        acceleration: 0.0001, springTension: 0.9999
- 			    }
- 			},
-	     	outOfBoundRestrictFactor: 0,
-	     	initialOffset: 0,
-	    },
 	    items: [
 	     	{
 	     		xtype:'container',
-				width: window.innerWidth,
+				width: '85%',
 		        tpl: new Ext.XTemplate(
 		            "<div class='container'>",
 		        		"<div class='food'>",
@@ -39,12 +23,11 @@ Ext.define('ricepo.view.CartItem',{
 	     	},
 	     	{
 	     		xtype:'container',
-	     		width: '100px',
+	     		width: '15%',
 	     		cls: 'deletePanel',
 	     		items: [{
 	     			xtype: 'button',
-	     			text: 'Delete',
-	     			//iconCls: 'trash',
+	     			iconCls: 'delete',
 	     			height: '100%',
 	     			listeners: {
 		     			release:function(cmp,e){

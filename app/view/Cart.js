@@ -24,24 +24,6 @@ Ext.define('ricepo.view.Cart', {
         closed: true,
 
         lastItem: 0,
-        listeners: {
-            itemtap: function(cmp, index, target, record,e){
-                target.toggle();
-            },
-            itemtouchstart: function(cmp, index, target, record,e){
-                var last = cmp.getLastItem();
-                if(target != last){
-                    if(last){ last.clear(); }
-                    cmp.setLastItem(target);
-                }
-            },
-            hide: function(cmp){
-                //hide all delete button
-                var last = cmp.getLastItem();
-                if(last){ last.clear(); }
-                cmp.setLastItem(0);
-            }
-        },
         items: [
             {
                 xtype: 'titlebar',
