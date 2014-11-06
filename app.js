@@ -20,7 +20,7 @@ Ext.application({
     //host: 'http://192.168.0.5:8080',
     lang: 'ch',
     startStatus: 'Processing',
-    startMsg: 'Contacting restaurant',
+    startMsg: '正在等待饭店确认',
     rest: null,
     city: null,
 
