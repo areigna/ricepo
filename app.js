@@ -9,7 +9,7 @@
     changes and its generated code, it will produce a "merge conflict" that you
     will need to resolve manually.
 */
-function host(){ return 'http://ec2-54-163-253-22.compute-1.amazonaws.com:8080'; } //prod
+function host(){ return 'http://ricepo.com:8080'; } //prod
 //function host(){ return 'http://ec2-54-197-197-221.compute-1.amazonaws.com:8080'; } //dev
 //function host(){ return 'http://localhost:8080'; }
 
