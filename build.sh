@@ -11,4 +11,4 @@ sencha app build native
 cp -r res/* phonegap/www/res/
 
 #git commit & push
-cd phonegap ; git add . ; git commit -m 'new commit' ; git push origin master
+cd phonegap ; git add -A ; git commit -m 'new commit' ; git push origin master
