@@ -10,6 +10,7 @@ Ext.define('ricepo.store.Cities', {
 		data : [
 			{city: "Rochester,NY", country: "us", image: 'resources/images/3.jpg'},
 			{city: "Bloomington,IN", country: "us", image: 'resources/images/5.jpg'},
+			{city: "Columbus,OH", country: "us", image: 'resources/images/5.jpg'},
 		]
 		//autoLoad: true,
 		//commented out the ajax city loading
