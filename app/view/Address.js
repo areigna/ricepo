@@ -22,6 +22,8 @@ Ext.define('ricepo.view.Address',{
                 this.checkMin();
                 this.checkForm();
                 this.deliveryFee();
+                //for ohio, need a different form
+                this.toggleOhio(this.isOhio());
                 //also check close, go back to cart if necessary
                 //refresh slider
                 this.slideRefresh();
@@ -59,9 +61,49 @@ Ext.define('ricepo.view.Address',{
                 ]
             },
             ///////////////////form starts here//////////////////////
+            //////for ohio only///////////
+            //time slot selector
+            {
+                xtype: 'fieldset',
+                id: 'slotpanel',
+                title: 'Choose Delivery Time',
+                defaults:{
+                    xtype: 'radiofield',
+                    labelWidth: '80%',
+                    name: 'slot',
+                    listeners: {
+                        check: function(cmp){
+                            cmp.up('address').toggleOhioLocation(cmp.getValue().toLowerCase() == '5:30pm');
+                        }
+                    }
+                },
+                items: [
+                    {label: '12:00pm', value: '12:00pm'},
+                    {label: '5:30pm', value: '5:30pm'}
+                ]
+            },
+            //time slot selector
+            {
+                xtype: 'fieldset',
+                id: 'locationpanel',
+                title: 'Choose Pickup Location',
+                defaults:{
+                    xtype: 'radiofield',
+                    labelWidth: '80%',
+                    name: 'location',
+                },
+                items: [
+                    {label: 'Mason Hall', value: 'Mason Hall'},
+                    {label: '18th Ave Library', value: '18th Ave Library'},
+                    {label: 'OV', value: 'OV', disabled: true},
+                    {label: 'HV', value: 'HV', disabled: true},
+                ]
+            },
+            ////////generic form////////////
             //payment info
             {
                 xtype: 'fieldset',
+                id: 'paymentpanel',
                 title: '',
                 defaults:{
                     xtype: 'radiofield',
@@ -74,6 +116,7 @@ Ext.define('ricepo.view.Address',{
             //delivery info
             {
                 xtype: 'fieldset',
+                id: 'pickuppanel',
                 title: '',
                 //instructions: '',
                 defaults: {
@@ -455,5 +498,48 @@ Ext.define('ricepo.view.Address',{
         slider.setValue(start);
         slider.setLabel('Now');
         slider.setLabelCls('now');
+    },
+    //all functions about ohio
+    isOhio: function(){
+        return ricepo.app.city.toLowerCase() == 'columbus,oh';
+    },
+    toggleOhio: function(on){
+        var slotPanel = this.down('#slotPanel');
+        var locationPanel = this.down('#locationPanel');
+        if(on){
+            this.down('#slotpanel').show();
+            this.down('#locationpanel').show();
+            this.down('#paymentpanel').hide();
+            this.down('#pickuppanel').hide();
+            this.down('sliderfield').hide();
+            this.down('#deliverypanel').setInstructions(null);
+        }
+        else{
+            this.down('#slotpanel').hide();
+            this.down('#locationpanel').hide();
+            this.down('#paymentpanel').show();
+            this.down('#pickuppanel').show();
+            this.down('sliderfield').show();
+            this.down('#deliverypanel').setInstructions('Slide for future order time');
+        }
+    },
+    toggleOhioLocation: function(on){
+        var items = this.down('#locationpanel').getItems();
+        if(on){
+            items.get(2).enable();
+            items.get(3).enable();
+        }
+        else {
+            items.get(2).disable();
+            items.get(3).disable();
+            items.get(2).uncheck();
+            items.get(3).uncheck();
+        }
+    },
+    //make sure there's no selection of disabled option
+    uncheckDisable: function(){
+        this.down('#locationpanel').getItems().each(function(cmp){
+            if(cmp.getDisabled()){cmp.uncheck(); }
+        });
     },
 });
