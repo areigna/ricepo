@@ -389,7 +389,8 @@ Ext.define('ricepo.view.Address',{
                 slot: localStorage.getItem('slot'),
                 location: localStorage.getItem('location'),
                 locationDetail: localStorage.getItem('locationDetail'),
-                phone: localStorage.getItem('phone')
+                phone: localStorage.getItem('phone'),
+                comments: localStorage.getItem('comments'),
             })
         }
         else{
