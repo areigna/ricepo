@@ -21,12 +21,10 @@ Ext.define('ricepo.view.Address',{
                 //scroll to top
                 this.getScrollable().getScroller().scrollTo(0,0);
                 //for ohio, need a different form
-                if(!this.isOhio()){
-                    this.checkMin();
-                    this.slideRefresh();
-                }
-                this.deliveryFee();
+                this.checkMin();
                 this.checkForm();
+                this.deliveryFee();
+                this.slideRefresh();
             },
             painted: function(){this.checkClose(); }
         },
@@ -265,11 +263,9 @@ Ext.define('ricepo.view.Address',{
     updateTotal: function(current , old){
         //will have error is current is 0
         if(current){
-            if(!this.isOhio()){
-                this.checkMin();
-                //we have to update delivery fee, because tab might not be updated when checkmin
-                this.checkForm();
-            }
+            this.checkMin();
+            //we have to update delivery fee, because tab might not be updated when checkmin
+            this.checkForm();
             this.deliveryFee();
         }
     },
@@ -566,6 +562,7 @@ Ext.define('ricepo.view.Address',{
     },
     slideRefresh: function(){
         if(!ricepo.app.rest) return;
+        if(this.isOhio()) return;
         var hour = ricepo.app.rest.get('hour' + new Date().getDay());
         if(hour == 'closed') return;
         var arr = hour.split('-')[1].split(':');
