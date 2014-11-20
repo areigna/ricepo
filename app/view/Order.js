@@ -170,6 +170,10 @@ Ext.define('ricepo.view.Order',{
             var deliverypanel = this.down('[cls=deliverypanel]')
             deliverypanel.removeAll(true);
             deliverypanel.add({value: current.get('address')});
+            //this is for ihio location detail
+            if(current.get('address2')){
+                deliverypanel.add({value: current.get('address2')});
+            }
             deliverypanel.add({value: current.get('phone')});
             if(current.get('comments')){
                 deliverypanel.add({value: current.get('comments')});

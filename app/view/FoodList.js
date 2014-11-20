@@ -161,6 +161,9 @@ Ext.define('ricepo.view.FoodList', {
             Ext.getCmp('cart').setStore(id+'CartsStore');
             Ext.getCmp('cart').setTotal(cartStore.getTotal());
 
+            //turn on/off for ohio
+            Ext.getCmp('address').toggleOhio();
+
             //whole app check close
             ricepo.app.refreshClose();
 
