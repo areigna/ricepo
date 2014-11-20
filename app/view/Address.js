@@ -23,11 +23,9 @@ Ext.define('ricepo.view.Address',{
                 //for ohio, need a different form
                 if(!this.isOhio()){
                     this.checkMin();
-                    this.deliveryFee();
-                    //also check close, go back to cart if necessary
-                    //refresh slider
                     this.slideRefresh();
                 }
+                this.deliveryFee();
                 this.checkForm();
             },
             painted: function(){this.checkClose(); }
