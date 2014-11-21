@@ -1,3 +1,11 @@
+var lunch = [
+        {text: 'Mason Hall', value: 'Mason Hall'},
+        {text: '18th Ave Library', value: '18th Ave Library'},
+    ],
+    dinner = [
+        {text: 'OV', value: 'OV'},
+        {text: 'UV', value: 'UV'},
+    ];
 Ext.define('ricepo.view.Address',{
     extend: 'Ext.form.Panel',
     xtype: 'address',
@@ -13,7 +21,6 @@ Ext.define('ricepo.view.Address',{
 
         total: 0,
         tab: null,
-        ohioFee: 0,
 
         listeners: {
             show: function(){
@@ -71,15 +78,16 @@ Ext.define('ricepo.view.Address',{
                         placeHolder: 'Choose Delivery Time',
                         autoSelect: false,
                         name: 'slot',
+                        userPicker: false,
                         listeners: {
                             change: function(cmp, newValue){
-                                cmp.up('address').down('#locationselect').changeOptions(newValue);
+                                cmp.up('address').changeLocationOptions(newValue);
                                 cmp.up('address').checkForm();
                             }
                         },
                         options: [
-                            {text: '12:00pm',  value: '12:00'},
-                            {text: '6:30pm', value: '6:30'},
+                            {text: '12:00-1:00 PM',  value: '12:00-1:00'},
+                            {text: '6:30-7:30 PM', value: '6:30-7:30'},
                         ]
                     },
                 ]
@@ -101,37 +109,17 @@ Ext.define('ricepo.view.Address',{
                                 var address = cmp.up('address'),
                                     locationDetail = address.down('#locationdetail'),
                                     matches;
-                                if(newValue && (matches = newValue.match(/(ov)|(hv)/i))){
-                                    address.setOhioFee(5);
+                                if(newValue && (matches = newValue.match(/(ov)|(uv)/i))){
                                     locationDetail.show();
                                     locationDetail.setPlaceHolder('Address in ' + matches[0] + '?');
                                 }
                                 else{
-                                    address.setOhioFee(newValue ? 3 : 0);
                                     locationDetail.hide();
                                 }
-                                address.deliveryFee();
                                 address.checkForm();
                             },
-                            initialize: function(cmp){
-                                cmp.changeOptions();
-                            },
                         },
-                        options: [],
-                        changeOptions: function(slot){
-                            var lunch = [
-                                    {text: 'Mason Hall $3', value: 'Mason Hall'},
-                                    {text: '18th Ave Library $3', value: '18th Ave Library'},
-                                ],
-                                dinner = [
-                                    {text: 'OV $5', value: 'OV'},
-                                    {text: 'HV $5', value: 'HV'},
-                                ];
-                            if(slot == '6:30'){
-                                return this.setOptions(lunch.concat(dinner));
-                            }
-                            this.setOptions(lunch);
-                        },
+                        options: lunch,
                     },
                     {
                         xtype: 'textfield',
@@ -316,14 +304,15 @@ Ext.define('ricepo.view.Address',{
         var subtotal = me.getTotal();
         var fee = ricepo.app.rest.get('delivery_fee');
         me.down('#subtotalfield').setValue('$'+subtotal.toFixed(2));
-        me.down('#taxfield').setValue('$'+(subtotal*0.08).toFixed(2));
 
         if(this.isOhio()){
-            fee = this.getOhioFee();
+            fee = localStorage.getItem('notFirstOrder') ? 3 : 0;
             me.down('#feefield').show().setValue('$'+fee.toFixed(2));
-            me.down('#totalfield').setValue('$'+(subtotal*1.08+fee).toFixed(2));
+            me.down('#taxfield').setValue('$'+(subtotal*0).toFixed(2));
+            me.down('#totalfield').setValue('$'+(subtotal*1+fee).toFixed(2));
         }
         else{
+            me.down('#taxfield').setValue('$'+(subtotal*0.08).toFixed(2));
             if(this.getTab() == 'delivery'){
                 me.down('#feefield').show().setValue('$'+fee.toFixed(2));
                 me.down('#totalfield').setValue('$'+(subtotal*1.08+fee).toFixed(2));
@@ -452,6 +441,13 @@ Ext.define('ricepo.view.Address',{
         //set apn and id
         order.apn = localStorage.getItem('apn');
         order.user_id = ricepo.app.id;
+        //delivery fee
+        order.fee = ricepo.app.rest.get('delivery_fee');
+        order.tax = me.getTotal()*0.08;
+        if(this.isOhio()){
+            order.fee = localStorage.getItem('notFirstOrder') ? 3 : 0;
+            order.tax = 0;
+        }
         //ser future order
         order.delay = this.down('sliderfield').getLabel();
         //delivery
@@ -520,6 +516,7 @@ Ext.define('ricepo.view.Address',{
                     order.order_id = data.order_id;
                     //add order to store
                     orderStore.add(order)   ;
+                    localStorage.setItem('notFirstOrder', true);
                     //clear the cart
                     Ext.getStore(ricepo.app.rest.get('rest_id')+ 'CartsStore').removeAll();
                     //clear the restaurant //why?
@@ -586,7 +583,7 @@ Ext.define('ricepo.view.Address',{
     },
     //all functions about ohio
     isOhio: function(){
-        return ricepo.app.city.toLowerCase() == 'columbus,oh';
+        return /columbus/i.test(ricepo.app.city);
     },
     toggleOhio: function(){
         if(this.isOhio()){
@@ -607,5 +604,13 @@ Ext.define('ricepo.view.Address',{
             this.down('#addressfield').show();
             this.down('#deliverypanel').setInstructions('Slide for future order time');
         }
-    }
+    },
+    changeLocationOptions: function(slot){
+        var select = this.down('#locationselect'),
+            me = this;
+        if(/6:30/.test(slot)){
+            return select.setOptions(lunch.concat(dinner));
+        }
+        select.setOptions(lunch);
+    },
 });

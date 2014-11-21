@@ -88,6 +88,7 @@ Ext.define('ricepo.view.Order',{
                 items:[
                     {
                         text: 'Re - Order',
+                        id: 'reorderbutton',
                         xtype: 'button',
                         cls: ['buttonfield','good'],
                         pressedCls: 'pressed',
@@ -159,12 +160,31 @@ Ext.define('ricepo.view.Order',{
                     value: '$'+items[i].price.toFixed(2),
                 });
             }
+            var subtotal = current.get('total');
+            totalpanel.add({ label: 'Subtotal', value: '$' + subtotal.toFixed(2)});
+
+            var tax = subtotal*0.08;
+            if(current.get('tax') || current.get('tax') == 0){
+                tax = current.get('tax');
+            }
+            totalpanel.add({ label: 'Tax', value: '$' + tax.toFixed(2)});
+
+            var fee = 0;
+            if(current.get('address') !== 'pickup'){
+                if(current.get('fee') || current.get('fee') == 0){
+                    fee = current.get('fee');
+                }
+                else{
+                    fee = current.get('rest').delivery_fee;
+                }
+            }
+            totalpanel.add({ label: 'Delivery', value: '$' + fee.toFixed(2)});
+
             totalpanel.add({
-                //label: 'Total + tax '+(current.get('address') == 'pickup' ? '' : '+ deli fee'),
                 label: 'Total',
-                value: '$'+(current.get('total')*1.08+   (current.get('address') == 'pickup' ? 0 : current.get('rest').delivery_fee )   ).toFixed(2),
+                value: '$' + (subtotal+tax+fee).toFixed(2)
             });
-            totalpanel.setInstructions('Total with tax' + (current.get('address') == 'pickup' ? '' : ' & delivery fee'));
+            //totalpanel.setInstructions('Total with tax' + (current.get('address') == 'pickup' ? '' : ' & delivery fee'));
 
             //delivery info
             var deliverypanel = this.down('[cls=deliverypanel]')
@@ -184,6 +204,12 @@ Ext.define('ricepo.view.Order',{
 
             //
             //if(current.get('status') != ricepo.app.startStatus) this.down('#cancelbutton').disable();
+            if(current.get('rest').city.toLowerCase() !== Ext.getCmp('home').getCity().toLowerCase()){
+                this.down('#reorderbutton').disable();
+            }
+            else{
+                this.down('#reorderbutton').enable();
+            }
             this.down('#cancelbutton').disable();
 
     	}

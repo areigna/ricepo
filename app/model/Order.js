@@ -4,7 +4,7 @@ Ext.define('ricepo.model.Order', {
         fields: [
             'order_id','comments', 
             'items', 'rest',
-            'address', 'phone', 'delay', 'address2',
+            'address', 'phone', 'delay', 'address2','fee', 'tax',
             //{name: 'done', type: 'bool', defaultValue: false},
             {name: 'done', type: 'number', defaultValue: 0},
             {name: 'total', type: 'number'},

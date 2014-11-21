@@ -5,7 +5,7 @@ Ext.define('ricepo.model.Rest', {
             'city','rest_id','click','name','chn_name',
             'delivery_fee','min', 'image','closed', 'off',
 
-            'popular', 'chn_popular', 'phone',
+            'popular', 'chn_popular', 'phone', 'fax', 'sms',
 
             'hour0', 'hour1', 'hour2', 'hour3', 'hour4', 'hour5', 'hour6',
             {
