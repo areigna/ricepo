@@ -37,9 +37,9 @@ Ext.define('ricepo.view.CityList', {
 				//if(!ricepo.app.checkNetwork()){return false;}
 				
 	        	var home = Ext.getCmp('home');
-            	ricepo.app.slideCmp(home, 'left'); 
 
 	        	home.setCity(record.get('city'));
+          	ricepo.app.slideCmp(home, 'left'); 
 			},
 			show: function(){
 				//this.deselectAll();

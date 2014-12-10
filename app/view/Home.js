@@ -60,6 +60,7 @@ Ext.define('ricepo.view.Home', {
 			},
 			show: function(){
 				this.deselectAll();
+				this.showOhio();
 			},
 			initialize: function(){
 				ricepo.app.refreshOrder();
@@ -130,5 +131,32 @@ Ext.define('ricepo.view.Home', {
 			text += ' ('+current+')';
 		}
 		this.down('titlebar').down('[align=right]').setText(text);
+	},
+	showOhio: function(){
+		if(!/columbus/i.test(this.getCity()) || localStorage.getItem('OhioSeen')) return;
+		localStorage.setItem('OhioSeen', true);
+		Ext.Viewport.add({
+      xtype: 'panel',
+      modal: true,
+      hideOnMaskTap: true,
+      showAnimation: {type: 'fadeIn', duration: 250, easing: 'ease-out'},
+      hideAnimation: {type: 'fadeOut', duration: 250, easing: 'ease-out'},
+      centered: true, width: '80%', height: '60%',
+      styleHtmlContent: true,
+      scrollable: true,
+      html: '<p>亲！感谢您使用Ricepo</p>' + 
+						'<p>第一次下单的客户免配送费哟！</p>' +
+						'<ul>' +
+						'<li>中午配送时间为12点到下午1点</li>' +
+						'<li>中午请在上午11点之前下单</li>' +
+						'<li>中午现已开放Mason和SEL取餐点！</li>' +
+						'<li>晚上配送时间为下午6点半到7点半</li>' +
+						'<li>晚上请在下午5点半之前下单</li>' +
+						'<li>晚餐时段UV和OV可以送货上门哟！</li>' +
+						'<li>配送费用统一$3/订单</li>' +
+						'</ul>' +
+						'<p>赶紧开始订餐吧！</p>',
+      //items: [{docked: 'top', xtype: 'toolbar', title: 'Overlay Title'} ],
+    });	
 	}
 });

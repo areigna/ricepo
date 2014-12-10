@@ -7,7 +7,7 @@ Ext.define('ricepo.store.Carts', {
 	config: {
 		storeId: 'cartsStore',
 		model: 'ricepo.model.Cart',
-		sorters: {property:'time', direction: 'DESC'},
+		sorters: {property:'food_id', direction: 'ASC'},
         autoLoad: true,
         autoSync: true,
 		listeners: {

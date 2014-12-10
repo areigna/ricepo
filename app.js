@@ -9,7 +9,7 @@
     changes and its generated code, it will produce a "merge conflict" that you
     will need to resolve manually.
 */
-function host(){ return 'http://ec2-54-163-253-22.compute-1.amazonaws.com:8080'; } //prod
+function host(){ return 'http://ricepo.com:8080'; } //prod
 //function host(){ return 'http://ec2-54-197-197-221.compute-1.amazonaws.com:8080'; } //dev
 //function host(){ return 'http://localhost:8080'; }
 
@@ -20,7 +20,7 @@ Ext.application({
     //host: 'http://192.168.0.5:8080',
     lang: 'ch',
     startStatus: 'Processing',
-    startMsg: 'Contacting restaurant',
+    startMsg: '正在等待饭店确认..',
     rest: null,
     city: null,
 

@@ -1,7 +1,15 @@
+var lunch = [
+        {text: 'Mason Hall', value: 'Mason Hall'},
+        {text: '18th Ave Library', value: '18th Ave Library'},
+    ],
+    dinner = [
+        {text: 'OV', value: 'OV'},
+        {text: 'UV', value: 'UV'},
+    ];
 Ext.define('ricepo.view.Address',{
     extend: 'Ext.form.Panel',
     xtype: 'address',
-    requires: ['Ext.form.FieldSet','Ext.field.Radio', 'Ext.field.Number', 'Ext.field.Slider'],
+    requires: ['Ext.form.FieldSet','Ext.field.Radio', 'Ext.field.Number', 'Ext.field.Slider', 'Ext.field.Select'],
     config:{
         id: 'address',
         fullscreen: true,
@@ -19,11 +27,10 @@ Ext.define('ricepo.view.Address',{
                 //this.setTotal(Ext.getCmp('cart').getStore().getTotal());
                 //scroll to top
                 this.getScrollable().getScroller().scrollTo(0,0);
+                //for ohio, need a different form
                 this.checkMin();
                 this.checkForm();
                 this.deliveryFee();
-                //also check close, go back to cart if necessary
-                //refresh slider
                 this.slideRefresh();
             },
             painted: function(){this.checkClose(); }
@@ -59,9 +66,74 @@ Ext.define('ricepo.view.Address',{
                 ]
             },
             ///////////////////form starts here//////////////////////
+            //////for ohio only///////////
+            //time slot selector
+            {
+                xtype: 'fieldset',
+                id: 'slotpanel',
+                title: '',
+                items: [
+                    {
+                        xtype: 'selectfield',
+                        placeHolder: 'Choose Delivery Time',
+                        autoSelect: false,
+                        name: 'slot',
+                        userPicker: false,
+                        listeners: {
+                            change: function(cmp, newValue){
+                                cmp.up('address').changeLocationOptions(newValue);
+                                cmp.up('address').checkForm();
+                            }
+                        },
+                        options: [
+                            {text: '12:00-1:00 PM',  value: '12:00-1:00'},
+                            {text: '6:30-7:30 PM', value: '6:30-7:30'},
+                        ]
+                    },
+                ]
+            },
+            //time slot selector
+            {
+                xtype: 'fieldset',
+                id: 'locationpanel',
+                title: '',
+                items: [
+                    {
+                        xtype: 'selectfield',
+                        id: 'locationselect',
+                        placeHolder: 'Choose Location',
+                        autoSelect: false,
+                        name: 'location',
+                        listeners: {
+                            change: function(cmp, newValue){
+                                var address = cmp.up('address'),
+                                    locationDetail = address.down('#locationdetail'),
+                                    matches;
+                                if(newValue && (matches = newValue.match(/(ov)|(uv)/i))){
+                                    locationDetail.show();
+                                    locationDetail.setPlaceHolder('Address in ' + matches[0] + '?');
+                                }
+                                else{
+                                    locationDetail.hide();
+                                }
+                                address.checkForm();
+                            },
+                        },
+                        options: lunch,
+                    },
+                    {
+                        xtype: 'textfield',
+                        id: 'locationdetail',
+                        hidden: true,
+                        name: 'locationDetail',
+                    }
+                ]
+            },
+            ////////generic form////////////
             //payment info
             {
                 xtype: 'fieldset',
+                id: 'paymentpanel',
                 title: '',
                 defaults:{
                     xtype: 'radiofield',
@@ -74,6 +146,7 @@ Ext.define('ricepo.view.Address',{
             //delivery info
             {
                 xtype: 'fieldset',
+                id: 'pickuppanel',
                 title: '',
                 //instructions: '',
                 defaults: {
@@ -145,11 +218,12 @@ Ext.define('ricepo.view.Address',{
                     xtype: 'textfield',
                     clearIcon: false,
                     readOnly: true,
-                    labelWidth: '70%',
+                    labelWidth: '50%',
                 },
                 items: [
-                    //{label: 'Subtotal:',value: '$0.00', id: 'subtotalfield'},
-                    //{label: 'Delivery Fee:',value: '$0.00', id: 'feefield'},
+                    {label: 'Subtotal:',value: '$0.00', id: 'subtotalfield'},
+                    {label: 'Tax:',value: '$0.00', id: 'taxfield'},
+                    {label: 'Delivery Fee:',value: '$0.00', id: 'feefield'},
                     {label: 'Total',value: '$0.00', id: 'totalfield',},
                 ],
             },
@@ -187,6 +261,7 @@ Ext.define('ricepo.view.Address',{
     checkMin: function(){
         var me = this;
         var min = ricepo.app.rest.get('min');
+        if(this.isOhio()) return;
         if(min == -1){
             me.down('#deliverybtn').disable();
             me.down('#deliverybtn').setLabel('No Delivery');
@@ -204,6 +279,7 @@ Ext.define('ricepo.view.Address',{
     },
     //change tab, will trigger delivery fee and check form
     updateTab: function(current, old){
+        if(this.isOhio()) return;
         if(current == 'delivery'){
             //allowed
             if(this.down('#deliverybtn').isDisabled()){
@@ -227,42 +303,56 @@ Ext.define('ricepo.view.Address',{
         var me = this;
         var subtotal = me.getTotal();
         var fee = ricepo.app.rest.get('delivery_fee');
-        if(this.getTab() == 'delivery'){
-            //me.down('#totalfield').setLabel('Total + tax + deli fee:');
-            me.down('#totalfield').setValue('$'+(subtotal*1.08+fee).toFixed(2));
-            me.down('#totalfield').up('fieldset').setInstructions('Total with tax & delivery fee');
-        }
-        else{
-            //me.down('#totalfield').setLabel('Total + tax:');
-            me.down('#totalfield').setValue('$'+(subtotal*1.08).toFixed(2));
-            me.down('#totalfield').up('fieldset').setInstructions('Total with tax');
-        }
-        /*
-        if(this.getTab() == 'delivery'){
-            me.down('#subtotalfield').show().setValue('$'+subtotal.toFixed(2));
+        me.down('#subtotalfield').setValue('$'+subtotal.toFixed(2));
+
+        if(this.isOhio()){
+            fee = localStorage.getItem('notFirstOrder') ? 3 : 0;
             me.down('#feefield').show().setValue('$'+fee.toFixed(2));
-            me.down('#totalfield').show().setValue('$'+(subtotal+fee).toFixed(2));
+            me.down('#taxfield').setValue('$'+(subtotal*0).toFixed(2));
+            me.down('#totalfield').setValue('$'+(subtotal*1+fee).toFixed(2));
         }
         else{
-            me.down('#subtotalfield').hide();
-            me.down('#feefield').hide();
-            me.down('#totalfield').show().setValue('$'+subtotal.toFixed(2));
+            me.down('#taxfield').setValue('$'+(subtotal*0.08).toFixed(2));
+            if(this.getTab() == 'delivery'){
+                me.down('#feefield').show().setValue('$'+fee.toFixed(2));
+                me.down('#totalfield').setValue('$'+(subtotal*1.08+fee).toFixed(2));
+                //me.down('#totalfield').up('fieldset').setInstructions('Total with tax & delivery fee');
+            }
+            else{
+                me.down('#feefield').hide();
+                me.down('#totalfield').setValue('$'+(subtotal*1.08).toFixed(2));
+                //me.down('#totalfield').up('fieldset').setInstructions('Total with tax');
+            }
         }
-        */
     },
     //this function is called when user click confirm button
     checkForm: function(){
         var data = this.getValues();
         var fieldset = Ext.getCmp('placeorderbtn');
-        if(this.getTab()=='delivery' && !data.address){
-            fieldset.setText('Missing Address');
-            this.toggleButtons(false);
-            return false;
+        //ohio case
+        if(this.isOhio()){
+            if(!data.slot){
+                fieldset.setText('Missing Delivery Time');
+                this.toggleButtons(false);
+                return false;
+            }
+            if(!data.location){
+                fieldset.setText('Missing Delivery Location');
+                this.toggleButtons(false);
+                return false;
+            }
         }
-        if(!data.phone){
-            fieldset.setText('Missing Phone Number');
-            this.toggleButtons(false);
-            return false;
+        else{
+            if(this.getTab()=='delivery' && !data.address){
+                fieldset.setText('Missing Address');
+                this.toggleButtons(false);
+                return false;
+            }
+            if(!data.phone){
+                fieldset.setText('Missing Phone Number');
+                this.toggleButtons(false);
+                return false;
+            }
         }
         if(!this.validatePhone(data.phone)){
             fieldset.setText('Phone Number Invalid');
@@ -283,25 +373,36 @@ Ext.define('ricepo.view.Address',{
     },
     //this function is called when user tap the restaurant or when user enter one order
     changeAddress: function(address, phone, comments){
-        if(address == 'pickup'){
-            ;
-        }
-        else if(address == 'auto'){
-            address = localStorage.getItem('address');
-            phone = localStorage.getItem('phone');
-            comments = localStorage.getItem('comments');
-        }
-        //apply
-        this.setValues({
-            phone: phone,
-            comments: comments,
-        });
-        if(!address || address=='pickup'){this.setTab('pickup'); }
-        else{
+        if(this.isOhio()){
             this.setValues({
-                address: address,
+                slot: localStorage.getItem('slot'),
+                location: localStorage.getItem('location'),
+                locationDetail: localStorage.getItem('locationDetail'),
+                phone: localStorage.getItem('phone'),
+                comments: localStorage.getItem('comments'),
+            })
+        }
+        else{
+            if(address == 'pickup'){
+                ;
+            }
+            else if(address == 'auto'){
+                address = localStorage.getItem('address');
+                phone = localStorage.getItem('phone');
+                comments = localStorage.getItem('comments');
+            }
+            //apply
+            this.setValues({
+                phone: phone,
+                comments: comments,
             });
-            this.setTab('delivery'); 
+            if(!address || address=='pickup'){this.setTab('pickup'); }
+            else{
+                this.setValues({
+                    address: address,
+                });
+                this.setTab('delivery'); 
+            }
         }
         this.checkForm();
     },
@@ -340,15 +441,29 @@ Ext.define('ricepo.view.Address',{
         //set apn and id
         order.apn = localStorage.getItem('apn');
         order.user_id = ricepo.app.id;
+        //delivery fee
+        order.fee = ricepo.app.rest.get('delivery_fee');
+        order.tax = me.getTotal()*0.08;
+        if(this.isOhio()){
+            order.fee = localStorage.getItem('notFirstOrder') ? 3 : 0;
+            order.tax = 0;
+        }
         //ser future order
         order.delay = this.down('sliderfield').getLabel();
         //delivery
-        if(me.getTab() == 'delivery'){
-            order.total = ''+me.getTotal();// + ricepo.app.rest.get('delivery_fee')+'';
+        if(this.isOhio()){
+            order.address = order.slot + ' @ ' + order.location;
+            order.address2 = this.down('#locationdetail').isHidden() ? null : order.locationDetail;
+            order.total = ''+me.getTotal();
         }
         else{
-            order.address = 'pickup';
-            order.total = ''+me.getTotal();
+            if(me.getTab() == 'delivery'){
+                order.total = ''+me.getTotal();// + ricepo.app.rest.get('delivery_fee')+'';
+            }
+            else{
+                order.address = 'pickup';
+                order.total = ''+me.getTotal();
+            }
         }
         //items
         order.items = [];
@@ -370,10 +485,18 @@ Ext.define('ricepo.view.Address',{
         order.status = ricepo.app.startStatus;
         order.msg = ricepo.app.startMsg;
 
-        //save the address
-        if(order.address!='pickup'){localStorage.setItem('address', order.address); }
+        //save the order info
         localStorage.setItem('phone', order.phone);
         localStorage.setItem('comments', order.comments);
+
+        if(this.isOhio()){
+            localStorage.setItem('slot', order.slot);
+            localStorage.setItem('location', order.location);
+            localStorage.setItem('locationDetail', order.locationDetail);
+        }
+        else{
+            if(order.address!='pickup'){localStorage.setItem('address', order.address); }
+        }
 
         //send
         me.sendOrder(order);
@@ -393,6 +516,7 @@ Ext.define('ricepo.view.Address',{
                     order.order_id = data.order_id;
                     //add order to store
                     orderStore.add(order)   ;
+                    localStorage.setItem('notFirstOrder', true);
                     //clear the cart
                     Ext.getStore(ricepo.app.rest.get('rest_id')+ 'CartsStore').removeAll();
                     //clear the restaurant //why?
@@ -436,6 +560,7 @@ Ext.define('ricepo.view.Address',{
     },
     slideRefresh: function(){
         if(!ricepo.app.rest) return;
+        if(this.isOhio()) return;
         var hour = ricepo.app.rest.get('hour' + new Date().getDay());
         if(hour == 'closed') return;
         var arr = hour.split('-')[1].split(':');
@@ -455,5 +580,37 @@ Ext.define('ricepo.view.Address',{
         slider.setValue(start);
         slider.setLabel('Now');
         slider.setLabelCls('now');
+    },
+    //all functions about ohio
+    isOhio: function(){
+        return /columbus/i.test(ricepo.app.city);
+    },
+    toggleOhio: function(){
+        if(this.isOhio()){
+            this.down('#slotpanel').show();
+            this.down('#locationpanel').show();
+            this.down('#paymentpanel').hide();
+            this.down('#pickuppanel').hide();
+            this.down('sliderfield').hide();
+            this.down('#addressfield').hide();
+            this.down('#deliverypanel').setInstructions(null);
+        }
+        else{
+            this.down('#slotpanel').hide();
+            this.down('#locationpanel').hide();
+            this.down('#paymentpanel').show();
+            this.down('#pickuppanel').show();
+            this.down('sliderfield').show();
+            this.down('#addressfield').show();
+            this.down('#deliverypanel').setInstructions('Slide for future order time');
+        }
+    },
+    changeLocationOptions: function(slot){
+        var select = this.down('#locationselect'),
+            me = this;
+        if(/6:30/.test(slot)){
+            return select.setOptions(lunch.concat(dinner));
+        }
+        select.setOptions(lunch);
     },
 });
