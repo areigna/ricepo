@@ -75,8 +75,10 @@ Ext.define('ricepo.view.Address',{
                         userPicker: false,
                         listeners: {
                             change: function(cmp, newValue){
-                                cmp.up('address').changeLocationOptions(cmp.getRecord().raw);
-                                cmp.up('address').checkForm();
+                                if(newValue) {
+                                    cmp.up('address').changeLocationOptions(cmp.getRecord().raw);
+                                    cmp.up('address').checkForm();
+                                }
                             }
                         },
                         options: []
