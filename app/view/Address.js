@@ -297,7 +297,7 @@ Ext.define('ricepo.view.Address',{
         me.down('#subtotalfield').setValue('$'+subtotal.toFixed(2));
 
         if(this.isOhio()){
-            fee = localStorage.getItem('notFirstOrder') ? 3 : 0;
+            fee = localStorage.getItem('notFirstOrder') ? fee : 0;
             me.down('#feefield').show().setValue('$'+fee.toFixed(2));
             me.down('#taxfield').setValue('$'+(subtotal*0).toFixed(2));
             me.down('#totalfield').setValue('$'+(subtotal*1+fee).toFixed(2));
@@ -436,7 +436,7 @@ Ext.define('ricepo.view.Address',{
         order.fee = ricepo.app.rest.get('delivery_fee');
         order.tax = me.getTotal()*0.08;
         if(this.isOhio()){
-            order.fee = localStorage.getItem('notFirstOrder') ? 3 : 0;
+            order.fee = localStorage.getItem('notFirstOrder') ? order.fee : 0;
             order.tax = 0;
         }
         //ser future order
