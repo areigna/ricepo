@@ -6,7 +6,7 @@ Ext.define('ricepo.model.Rest', {
             'delivery_fee','min', 'image','closed', 'off',
 
             'popular', 'chn_popular', 'phone', 'fax', 'sms',
-            'slot', 'slot_info',
+            'slot', 'slot_info', 'note',
 
             'hour0', 'hour1', 'hour2', 'hour3', 'hour4', 'hour5', 'hour6',
             {
