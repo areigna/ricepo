@@ -603,7 +603,7 @@ Ext.define('ricepo.view.Address',{
     updateSlot: function(){
         if(this.isOhio() && ricepo.app.rest.get('slot')){
             this.down('#slotselect').setOptions(ricepo.app.rest.get('slot_options'));
-            this.down('#slotpanel').setTitle(ricepo.app.rest.get('slot_info'));
+            this.down('#slotpanel').setTitle(ricepo.app.rest.get('slot_info') || '');
         }
     }
 });
