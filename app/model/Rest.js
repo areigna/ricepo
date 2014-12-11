@@ -6,7 +6,7 @@ Ext.define('ricepo.model.Rest', {
             'delivery_fee','min', 'image','closed', 'off',
 
             'popular', 'chn_popular', 'phone', 'fax', 'sms',
-            'slot',
+            'slot', 'slot_info',
 
             'hour0', 'hour1', 'hour2', 'hour3', 'hour4', 'hour5', 'hour6',
             {
@@ -19,6 +19,7 @@ Ext.define('ricepo.model.Rest', {
                     for(var i = 0 ;i < slot.length; i++){
                         var item = {locations: []};
                         var locations = (slot[i].split('$')[1] || '').split(',');
+                        var days = (slot[i].split('$')[2] || '0123456').split('');
 
                         item.value = item.text = slot[i].split('$')[0];
                         for(var j = 0 ;j < locations.length; j++) {
