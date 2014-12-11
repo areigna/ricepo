@@ -6,8 +6,33 @@ Ext.define('ricepo.model.Rest', {
             'delivery_fee','min', 'image','closed', 'off',
 
             'popular', 'chn_popular', 'phone', 'fax', 'sms',
+            'slot',
 
             'hour0', 'hour1', 'hour2', 'hour3', 'hour4', 'hour5', 'hour6',
+            {
+                name: 'slot_options',
+                convert: function(value, record) {
+                    var slot = record.get('slot'),
+                        options = [];
+                    if(!slot || !slot.length) return null;
+
+                    for(var i = 0 ;i < slot.length; i++){
+                        var item = {locations: []};
+                        var locations = (slot[i].split('$')[1] || '').split(',');
+
+                        item.value = item.text = slot[i].split('$')[0];
+                        for(var j = 0 ;j < locations.length; j++) {
+                            var locationItem = {};
+                            locationItem.text = locationItem.value = locations[j].split('?')[0];
+                            locationItem.more = /\?/.test(locations[j]);
+                            item.locations.push(locationItem);
+                        }
+
+                        options.push(item);
+                    }
+                    return options;
+                }
+            },
             {
                 name: 'hour_closed',
                 convert: function(value, record){

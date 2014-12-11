@@ -1,11 +1,3 @@
-var lunch = [
-        {text: 'Mason Hall', value: 'Mason Hall'},
-        {text: '18th Ave Library', value: '18th Ave Library'},
-    ],
-    dinner = [
-        {text: 'OV', value: 'OV'},
-        {text: 'UV', value: 'UV'},
-    ];
 Ext.define('ricepo.view.Address',{
     extend: 'Ext.form.Panel',
     xtype: 'address',
@@ -28,6 +20,7 @@ Ext.define('ricepo.view.Address',{
                 //scroll to top
                 this.getScrollable().getScroller().scrollTo(0,0);
                 //for ohio, need a different form
+                this.updateSlot();
                 this.checkMin();
                 this.checkForm();
                 this.deliveryFee();
@@ -75,20 +68,18 @@ Ext.define('ricepo.view.Address',{
                 items: [
                     {
                         xtype: 'selectfield',
+                        id: 'slotselect',
                         placeHolder: 'Choose Delivery Time',
                         autoSelect: false,
                         name: 'slot',
                         userPicker: false,
                         listeners: {
                             change: function(cmp, newValue){
-                                cmp.up('address').changeLocationOptions(newValue);
+                                cmp.up('address').changeLocationOptions(cmp.getRecord().raw);
                                 cmp.up('address').checkForm();
                             }
                         },
-                        options: [
-                            {text: '12:00-1:00 PM',  value: '12:00-1:00'},
-                            {text: '6:30-7:30 PM', value: '6:30-7:30'},
-                        ]
+                        options: []
                     },
                 ]
             },
@@ -109,9 +100,9 @@ Ext.define('ricepo.view.Address',{
                                 var address = cmp.up('address'),
                                     locationDetail = address.down('#locationdetail'),
                                     matches;
-                                if(newValue && (matches = newValue.match(/(ov)|(uv)/i))){
+                                if(newValue && cmp.getRecord().raw.more){
                                     locationDetail.show();
-                                    locationDetail.setPlaceHolder('Address in ' + matches[0] + '?');
+                                    locationDetail.setPlaceHolder('Address in ' + newValue + '?');
                                 }
                                 else{
                                     locationDetail.hide();
@@ -119,7 +110,7 @@ Ext.define('ricepo.view.Address',{
                                 address.checkForm();
                             },
                         },
-                        options: lunch,
+                        options: [],
                     },
                     {
                         xtype: 'textfield',
@@ -605,12 +596,13 @@ Ext.define('ricepo.view.Address',{
             this.down('#deliverypanel').setInstructions('Slide for future order time');
         }
     },
-    changeLocationOptions: function(slot){
-        var select = this.down('#locationselect'),
-            me = this;
-        if(/6:30/.test(slot)){
-            return select.setOptions(lunch.concat(dinner));
-        }
-        select.setOptions(lunch);
+    changeLocationOptions: function(raw){
+        var select = this.down('#locationselect');
+        select.setOptions(raw.locations);
     },
+    updateSlot: function(){
+        if(this.isOhio() && ricepo.app.rest.get('slot')){
+            this.down('#slotselect').setOptions(ricepo.app.rest.get('slot_options'));
+        }
+    }
 });
