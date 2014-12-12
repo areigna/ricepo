@@ -47,6 +47,7 @@ Ext.define('ricepo.store.Rests', {
 		this.each(function(item){
 			//set null will automatically refresh the field
 			item.set('hour_closed',null);
+			item.set('slot_options',null);
 		});
 	}
 });

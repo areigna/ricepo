@@ -601,7 +601,7 @@ Ext.define('ricepo.view.Address',{
         select.setOptions(raw.locations);
     },
     updateSlot: function(){
-        if(this.isOhio() && ricepo.app.rest.get('slot')){
+        if(this.isOhio() && ricepo.app.rest && ricepo.app.rest.get('slot')){
             this.down('#slotselect').setOptions(ricepo.app.rest.get('slot_options'));
             this.down('#slotpanel').setTitle(ricepo.app.rest.get('slot_info') || '');
         }
