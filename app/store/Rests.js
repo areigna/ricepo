@@ -35,6 +35,7 @@ Ext.define('ricepo.store.Rests', {
 				ricepo.app.refreshClose();
 				//update last refresh time
 				ricepo.app.lastRefresh = new Date().getTime();
+				Ext.getCmp('home').showOhio();
 			},
 			updaterecord: function(){
 				//refresh closed everytine rest info changes
@@ -46,6 +47,7 @@ Ext.define('ricepo.store.Rests', {
 		this.each(function(item){
 			//set null will automatically refresh the field
 			item.set('hour_closed',null);
+			item.set('slot_options',null);
 		});
 	}
 });

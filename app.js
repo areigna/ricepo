@@ -222,6 +222,7 @@ Ext.application({
         Ext.getCmp('foodlist').checkClose();
         Ext.getCmp('cart').checkClose();
         Ext.getCmp('address').checkClose();
+        Ext.getCmp('address').updateSlot();
     },
     //called when order data is updated
     refreshOrder: function(){
