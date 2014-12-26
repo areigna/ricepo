@@ -411,6 +411,9 @@ Ext.define('ricepo.view.Address',{
     },
     confirm: function(){
         var me = this;
+        if( !navigator.notification ) {
+            return me.placeOrder();
+        }
         navigator.notification.confirm('Are you sure to place order?', function(buttonIndex){
             if(buttonIndex == 2) me.placeOrder();
         }, 'Ricepo', ['No','Yes']);
